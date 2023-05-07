@@ -3,79 +3,29 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         List<Conta> contas = new ArrayList<>();
-        int numeroDaConta = 0;
-        
+        boolean exit = false;
+
         while (true) {
-            System.out.println("Digite 1 para criar uma conta, 2 para ver o saldo de uma conta, 3 para sacar, 4 para depositar ou qualquer outra tecla para sair:");
+            System.out.println("Digite\n1 para criar uma conta\n2 para ver o saldo de uma conta\n3 para sacar\n4 para depositar\nqualquer outra tecla para sair:");
             String opcao = scanner.nextLine();
             
-            if (opcao.equals("1")) {
-                System.out.println("Digite o nome do titular da conta:");
-                String nomeTitular = scanner.nextLine();
-                
-                numeroDaConta++;
-                System.out.println("Digite o tipo de conta a ser criada: 1 para normal, 2 para especial, 3 para poupança. outro numero: inválido.");
-                String tipoConta = scanner.nextLine();
-                
-                switch(tipoConta){
-                    case "1":
-                        Conta conta = new Conta(numeroDaConta, nomeTitular);
-                        contas.add(conta);
-        
-                        System.out.println("Conta criada com sucesso! O número da conta é " + conta.getNumero());
-                        break;
-                    case "2":
-                        System.out.println("Insira o limite da conta especial:");
-                        double limite = scanner.nextDouble();
-                        scanner.nextLine();
-
-                        ContaEspecial contaE = new ContaEspecial(numeroDaConta, nomeTitular, limite);
-                        contas.add(contaE);
-
-                        System.out.println("Conta criada com sucesso! O número da conta é " + contaE.getNumero());
-                        break;
-                    case "3":
-                        ContaPoupanca contaP = new ContaPoupanca(numeroDaConta, nomeTitular);
-                        contas.add(contaP);
-
-                        System.out.println("Conta criada com sucesso! O número da conta é " + contaP.getNumero());
-                        break;
-                    default: break;
-                }
-            
-            } else if (opcao.equals("2")) {
-                System.out.println("Digite o número da conta:");
-                int numeroConta = scanner.nextInt();
-                scanner.nextLine();
-
-                Conta conta = null;
-                for (Conta c : contas) {
-                    if (c.getNumero() == numeroConta) {
-                        conta = c;
-                        break;
-                    }
-                }
-
+            switch (opcao) {
+            case "1": //cria Conta
+                contas = addConta(contas);
+                break;
+            case "2": //mostra saldo de dada Conta
+                Conta conta = buscaConta(contas);
                 if (conta == null) {
                     System.out.println("Conta não encontrada.");
                 } else {
                     System.out.println("Saldo da conta de " + conta.getNome_titular() + ": R$" + conta.getSaldo());
                 }
-            } else if (opcao.equals("3")) {
-                System.out.println("Digite o número da conta:");
-                int numeroConta = scanner.nextInt();
-                scanner.nextLine();
-
-                Conta conta = null;
-                for (Conta c : contas) {
-                    if (c.getNumero() == numeroConta) {
-                        conta = c;
-                        break;
-                    }
-                }
+                break;
+            case "3": //sacar valor de dada Conta
+                conta = buscaConta(contas);
 
                 if (conta == null) {
                     System.out.println("Conta não encontrada.");
@@ -90,17 +40,10 @@ public class Main {
                         System.out.println("Saldo insuficiente.");
                     }
                 }
-            } else if (opcao.equals("4")) {
-                System.out.println("Digite o número da conta:");
-                int numeroConta = scanner.nextInt();
+                break;
+            case "4":
+                conta = buscaConta(contas);
 
-                Conta conta = null;
-                for (Conta c : contas) {
-                    if (c.getNumero() == numeroConta) {
-                        conta = c;
-                        break;
-                    }
-                }
                 if (conta == null) {
                     System.out.println("Conta não encontrada.");
                 } else {
@@ -111,8 +54,63 @@ public class Main {
                     conta.depositar(valor);
                     System.out.println("Novo saldo: R$" + conta.getSaldo());
                 }
-            } else break;
+                break;
+            default:
+                exit = true;
+                break;
+            }
+            if (exit) break;
+            scanner.nextLine();
         }
         scanner.close();
+    }
+    
+    static Conta buscaConta(List<Conta> contas){
+        System.out.println("Digite o número da conta:");
+        int numeroConta = scanner.nextInt();
+        scanner.nextLine();
+        Conta conta = null;
+        for (Conta c : contas) {
+            if (c.getNumero() == numeroConta) {
+                conta = c;
+                break;
+            }
+        }
+        return conta;
+    }
+
+    static List<Conta> addConta(List<Conta> contas){
+        System.out.println("Digite o nome do titular da conta:");
+        String nomeTitular = scanner.nextLine();
+        System.out.println("Digite o tipo de conta a ser criada:\n1 para normal\n2 para especial\n3 para poupança\noutro numero: inválido.");
+        String tipoConta = scanner.nextLine();
+        switch(tipoConta){
+            case "1":
+                Conta conta = new Conta(contas.size()+1, nomeTitular);
+                contas.add(conta);
+
+                System.out.println("Conta criada com sucesso! O número da conta é " + conta.getNumero());
+                break;
+            case "2":
+                System.out.println("Insira o limite da conta especial:");
+                double limite = scanner.nextDouble();
+                scanner.nextLine();
+
+                ContaEspecial contaE = new ContaEspecial(contas.size()+1, nomeTitular, limite);
+                contas.add(contaE);
+
+                System.out.println("Conta criada com sucesso! O número da conta é " + contaE.getNumero());
+                break;
+            case "3":
+                ContaPoupanca contaP = new ContaPoupanca(contas.size()+1, nomeTitular);
+                contas.add(contaP);
+
+                System.out.println("Conta criada com sucesso! O número da conta é " + contaP.getNumero());
+                break;
+            default:
+                System.out.println("Número inválido. Conta do titular " + nomeTitular + " não foi criada.");
+                break;
+        }
+        return contas;
     }
 }

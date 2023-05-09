@@ -21,7 +21,7 @@ public class Main {
                 if (conta == null) {
                     System.out.println("Conta não encontrada.");
                 } else {
-                    System.out.println("Saldo da conta de " + conta.getNome_titular() + ": R$" + conta.getSaldo());
+                    System.out.println("Saldo da conta de " + conta.getTitular().getNome() + ": R$" + conta.getSaldo());
                 }
                 break;
             case "3": //sacar valor de dada Conta
@@ -82,27 +82,24 @@ public class Main {
     static List<Conta> addConta(List<Conta> contas){
         System.out.println("Digite o nome do titular da conta:");
         String nomeTitular = scanner.nextLine();
-        System.out.println("Digite o tipo de conta a ser criada:\n1 para normal\n2 para especial\n3 para poupança\noutro numero: inválido.");
+        System.out.println("Digite o cpf do titular da conta:");
+        String cpfTitular = scanner.nextLine();
+
+        System.out.println("Digite o tipo de conta a ser criada:\n1 para especial\n2 para poupança\noutro numero: inválido.");
         String tipoConta = scanner.nextLine();
         switch(tipoConta){
             case "1":
-                Conta conta = new Conta(contas.size()+1, nomeTitular);
-                contas.add(conta);
-
-                System.out.println("Conta criada com sucesso! O número da conta é " + conta.getNumero());
-                break;
-            case "2":
                 System.out.println("Insira o limite da conta especial:");
                 double limite = scanner.nextDouble();
                 scanner.nextLine();
 
-                ContaEspecial contaE = new ContaEspecial(contas.size()+1, nomeTitular, limite);
+                ContaEspecial contaE = new ContaEspecial(contas.size()+1, nomeTitular, cpfTitular, limite);
                 contas.add(contaE);
 
                 System.out.println("Conta criada com sucesso! O número da conta é " + contaE.getNumero());
                 break;
-            case "3":
-                ContaPoupanca contaP = new ContaPoupanca(contas.size()+1, nomeTitular);
+            case "2":
+                ContaPoupanca contaP = new ContaPoupanca(contas.size()+1, nomeTitular, cpfTitular);
                 contas.add(contaP);
 
                 System.out.println("Conta criada com sucesso! O número da conta é " + contaP.getNumero());

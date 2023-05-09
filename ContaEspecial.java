@@ -1,8 +1,8 @@
 public class ContaEspecial extends Conta {
     private double limite;
 
-    public ContaEspecial(int numero, String nome_titular, double limite){
-        super(numero, nome_titular);
+    public ContaEspecial(int numero, String nome_titular, String cpf_titular, double limite){
+        super(numero, nome_titular, cpf_titular);
         this.limite = limite;
 
     }
